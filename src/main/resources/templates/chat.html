@@ -21,8 +21,8 @@
 </form>
 
 <h1 th:each="msg: ${messages}"
-    th:text="${msg.username + ': ' + msg.message}"
-    th:unless="${msg.message.toLowerCase().contains('goodbye')}"
+    th:text="${msg.username + ': ' + msg.messageText}"
+    th:unless="${msg.messageText.toLowerCase().contains('goodbye')}"
 >No Messages</h1>
 
 </body>
