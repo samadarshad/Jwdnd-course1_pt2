@@ -5,6 +5,7 @@
     <title>Chat</title>
 </head>
 <body>
+<a href="/logout">Logout</a>
 <h1 th:text="${'Your username: ' + username}"></h1>
 <form action="#" th:action="@{'/chat'}" th:object="${chatForm}" method="POST">
     <label for="messageText">Message Text:</label>
@@ -23,6 +24,7 @@
     th:text="${msg.username + ': ' + msg.messageText}"
     th:unless="${msg.messageText.toLowerCase().contains('goodbye')}"
 >No Messages</h1>
+
 
 </body>
 </html>
