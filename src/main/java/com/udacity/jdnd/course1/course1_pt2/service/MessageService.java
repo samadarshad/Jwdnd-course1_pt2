@@ -45,7 +45,7 @@ public class MessageService {
     }
 
     public List<ChatMessage> getChatMessagesList() {
-        return new ArrayList<>(this.messageMapper.getMessages());
+        return this.messageMapper.getMessages();
 //        return new ArrayList<>(this.chatMessagesList);
     }
 }
