@@ -5,9 +5,8 @@
     <title>Chat</title>
 </head>
 <body>
+<h1 th:text="${'Your username: ' + username}"></h1>
 <form action="#" th:action="@{'/chat'}" th:object="${chatForm}" method="POST">
-    <label for="username">Username:</label>
-    <input id="username" type="text" th:field="*{username}">
     <label for="messageText">Message Text:</label>
     <input id="messageText" type="text" th:field="*{messageText}">
     <label for="messageType">Message Type: </label>
