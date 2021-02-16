@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import javax.swing.text.Style;
 import java.util.List;
@@ -25,6 +26,9 @@ public class ChatPage {
     @FindBy(xpath = "/html/body/ul/li")
     private List<WebElement> messagesList2;
 
+    @FindBy(id = "logout")
+    private WebElement logoutLink;
+
     public ChatPage (WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
@@ -37,6 +41,16 @@ public class ChatPage {
     public void sendMessage(String inMsgText, String inMsgType) {
         messageText.clear();
         messageText.sendKeys(inMsgText);
+        selectMessageType(inMsgType);
         messageText.submit();
+    }
+
+    public void selectMessageType(String value) {
+        Select messageTypeDropdown = new Select(messageType);
+        messageTypeDropdown.selectByValue(value);
+    }
+
+    public void logout() {
+        logoutLink.click();
     }
 }
