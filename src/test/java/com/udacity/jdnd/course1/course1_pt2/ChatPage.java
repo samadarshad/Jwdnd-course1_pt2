@@ -33,6 +33,10 @@ public class ChatPage {
         PageFactory.initElements(driver, this);
     }
 
+    public Boolean isLoggedIn() {
+        return logoutLink != null;
+    }
+
     public List<String> getMessagesList() {
         List<String> messagesListStr = messagesList2.stream().map(item -> item.getText()).collect(Collectors.toList());
         return messagesListStr;

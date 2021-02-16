@@ -1,4 +1,6 @@
 package com.udacity.jdnd.course1.course1_pt2;
+import com.udacity.jdnd.course1.course1_pt2.model.User;
+import com.udacity.jdnd.course1.course1_pt2.service.UserService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -8,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
@@ -15,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -28,6 +31,9 @@ class UserTestingApplicationTests {
     private SignupPage signupPage;
     private ChatPage chatPage;
 
+    @Autowired
+    private UserService userService;
+
     @BeforeAll
     public static void beforeEach() {
         WebDriverManager.chromedriver().setup();
@@ -38,20 +44,27 @@ class UserTestingApplicationTests {
     public static void afterEach() {
         driver.quit();
     }
-    
-    public void signupAndLogin(String username) {
+
+    public void signup(String username, String password) {
         String firstname = "first";
         String lastname = "last";
-        String password = "pass";
 
         driver.get("http://localhost:" + port + "/signup");
         signupPage = new SignupPage(driver);
         signupPage.signup(firstname, lastname, username, password);
+    }
 
+    public void login(String username, String password) {
         driver.get("http://localhost:" + port + "/login");
         loginPage = new LoginPage(driver);
 
         loginPage.login(username, password);
+    }
+
+    public void signupAndLogin(String username) {
+        String password = "pass";
+        signup(username, password);
+        login(username, password);
     }
 
     @Test
@@ -91,6 +104,25 @@ class UserTestingApplicationTests {
         List<String> expectedList = Arrays.asList("user1: Hello", "user2: Hi");
         List<String> messages = chatPage.getMessagesList();
         assertEquals(messages, expectedList);
+    }
+
+    @Test
+    public void whenAddUserToDatabaseTheirUsernameIsNotAvailable() throws InterruptedException {
+        assertTrue(userService.isUsernameAvailable("user"));
+        User user = new User(null, "user", null, "pass", "first", "last");
+        userService.createUser(user);
+        assertFalse(userService.isUsernameAvailable("user"));
+    }
+
+    @Test
+    public void whenAddUserToDatabaseTheyCanLogin() throws InterruptedException {
+        User user = new User(null, "user", null, "pass", "first", "last");
+        userService.createUser(user);
+        login("user", "pass");
+
+        chatPage = new ChatPage(driver);
+        assertTrue(chatPage.isLoggedIn());
+//        Thread.sleep(3000);
     }
 
 
