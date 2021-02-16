@@ -14,6 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,6 +27,7 @@ class UserTestingApplicationTests {
     private static WebDriver driver;
     private LoginPage loginPage;
     private SignupPage signupPage;
+    private ChatPage chatPage;
 
     @BeforeAll
     public static void beforeAll() {
@@ -53,9 +57,15 @@ class UserTestingApplicationTests {
         loginPage = new LoginPage(driver);
 
         loginPage.login("user", "pass");
-        
 
-        Thread.sleep(3000);
+        driver.get("http://localhost:" + port + "/chat");
+        chatPage = new ChatPage(driver);
+
+        chatPage.sendMessage("hello", "");
+        List<String> messages = chatPage.getMessagesList();
+
+        List<String> expectedList = Arrays.asList("user: hello");
+        assertEquals(messages, expectedList);
     }
 
 //    @Test

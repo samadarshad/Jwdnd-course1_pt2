@@ -6,7 +6,7 @@
 </head>
 <body>
 <a href="/logout">Logout</a>
-<h1 th:text="${'Your username: ' + username}"></h1>
+<h1 id="username" th:text="${'Your username: ' + username}"></h1>
 <form action="#" th:action="@{'/chat'}" th:object="${chatForm}" method="POST">
     <label for="messageText">Message Text:</label>
     <input id="messageText" type="text" th:field="*{messageText}">
@@ -19,11 +19,12 @@
 
     <input type="submit">
 </form>
+<ul id="messagesList"
+    th:each="msg: ${messages}">
+    <li th:text="${msg.username + ': ' + msg.messageText}"
+        th:unless="${msg.messageText.toLowerCase().contains('goodbye')}"></li>
 
-<h1 th:each="msg: ${messages}"
-    th:text="${msg.username + ': ' + msg.messageText}"
-    th:unless="${msg.messageText.toLowerCase().contains('goodbye')}"
->No Messages</h1>
+</ul>
 
 
 </body>
