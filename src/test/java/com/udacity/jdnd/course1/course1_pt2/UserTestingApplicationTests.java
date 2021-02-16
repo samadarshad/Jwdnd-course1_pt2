@@ -23,6 +23,7 @@ class UserTestingApplicationTests {
 
     private static WebDriver driver;
     private LoginPage loginPage;
+    private SignupPage signupPage;
 
     @BeforeAll
     public static void beforeAll() {
@@ -37,13 +38,23 @@ class UserTestingApplicationTests {
 
     @BeforeEach
     public void beforeEach() {
-        driver.get("http://localhost:" + port + "/login");
-        loginPage = new LoginPage(driver);
+//        driver.get("http://localhost:" + port + "/login");
+//        loginPage = new LoginPage(driver);
+
     }
 
     @Test
-    public void whenUserGoesToPageTheyCanSignUp() throws InterruptedException {
-        loginPage.goToSignup();
+    public void whenUserSignsUpTheyCanLogin() throws InterruptedException {
+        driver.get("http://localhost:" + port + "/signup");
+        signupPage = new SignupPage(driver);
+        signupPage.signup("first", "last", "user", "pass");
+
+        driver.get("http://localhost:" + port + "/login");
+        loginPage = new LoginPage(driver);
+
+        loginPage.login("user", "pass");
+        
+
         Thread.sleep(3000);
     }
 
