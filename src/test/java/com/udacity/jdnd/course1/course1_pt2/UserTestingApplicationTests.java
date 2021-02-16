@@ -3,13 +3,8 @@ import com.udacity.jdnd.course1.course1_pt2.model.User;
 import com.udacity.jdnd.course1.course1_pt2.service.UserService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -61,7 +56,7 @@ class UserTestingApplicationTests {
         loginPage.login(username, password);
     }
 
-    public void signupAndLogin(String username) {
+    public void signupAndLoginAndRedirectToChatPage(String username) {
         String password = "pass";
         signup(username, password);
         login(username, password);
@@ -69,9 +64,9 @@ class UserTestingApplicationTests {
 
     @Test
     public void whenUserSignsUpTheyCanLogin() throws InterruptedException {
-        signupAndLogin("user");
+        signupAndLoginAndRedirectToChatPage("user");
 
-        driver.get("http://localhost:" + port + "/chat");
+//        driver.get("http://localhost:" + port + "/chat");
         chatPage = new ChatPage(driver);
 
         chatPage.sendMessage("Hello", "Say");
@@ -85,17 +80,17 @@ class UserTestingApplicationTests {
 
     @Test
     public void whenUserOneSendsMessageThenUserTwoCanReadMessage() throws InterruptedException {
-        signupAndLogin("user1"); //how do I do all this user signup setting-up in the backend?
+        signupAndLoginAndRedirectToChatPage("user1"); //how do I do all this user signup setting-up in the backend?
 
-        driver.get("http://localhost:" + port + "/chat");
+//        driver.get("http://localhost:" + port + "/chat");
         chatPage = new ChatPage(driver);
 
         chatPage.sendMessage("Hello", "Say");
         chatPage.logout();
 
-        signupAndLogin("user2");
+        signupAndLoginAndRedirectToChatPage("user2");
 
-        driver.get("http://localhost:" + port + "/chat");
+//        driver.get("http://localhost:" + port + "/chat"); // you dont need this, it automatically takes you to the chatpage
         chatPage = new ChatPage(driver);
 
         chatPage.sendMessage("Hi", "Say");
